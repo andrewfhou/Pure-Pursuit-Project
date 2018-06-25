@@ -1,8 +1,29 @@
 public class PurePursuit {
     static class Point {
         double x, y;
+
         Point(double x, double y) { this.x = x; this.y = y; }
+
         public String toString() { return String.format("[%.2f, %.2f]", x, y); }
+
+        public Point rotateTransform(Point refPt) {
+            double angle = Math.atan2(this.y - refPt.y, this.x - refPt.x);
+            double sinAngle = Math.sin(angle);
+            double cosAngle = Math.cos(angle);
+
+            double xTran = this.x - refPt.x;
+            double yTran = this.y - refPt.y;
+            double x, y;
+
+            if (angle > 0.0) { //cw rotation
+                x = (xTran * cosAngle) + (yTran * sinAngle);
+                y = -(xTran * sinAngle) + (yTran * cosAngle);
+            } else { //ccw rotation
+                x = (xTran * cosAngle) - (yTran * sinAngle);
+                y = (xTran * sinAngle) + (yTran * cosAngle);
+            }
+            return new Point(x, y);
+        }
     }
 
     static class Line {
@@ -40,33 +61,29 @@ public class PurePursuit {
     }
 
     public static void main(String[] args) {
-        Point pt1 = new Point(0.0, 0.0);
+        Point refPt = new Point(0.0,  0.0); //reference point
         Point pt2 = new Point(10.0, 10.0);
         Point pt3 = new Point(20.0, 15.0);
         Point pt4 = new Point(30.0, 30.0);
 
-        Line ln12 = new Line(pt1, pt2);
-        Line ln13 = new Line(pt1, pt3);
-        Line ln14 = new Line(pt1, pt4);
+        Point pt2t = pt2.rotateTransform(refPt);
+        Point pt3t = pt3.rotateTransform(refPt);
+        Point pt4t = pt4.rotateTransform(refPt);
 
-        Point pt2t12 = ln12.rotate(pt2);
-        Point pt3t13 = ln13.rotate(pt3);
-        Point pt4t14 = ln14.rotate(pt4);
+        Line ln12 = new Line(refPt, pt2t);
 
-        System.out.println("pt1: " + pt1 + "\tpt2: " + pt2);
+        System.out.println("refPt: " + refPt + "\tpt2t: " + pt2t);
         System.out.println("target heading: " + ln12.angle + "\n");
 
-        Line ln2t3t = new Line(pt2t12, pt3t13);
+        Line ln23 = new Line(pt2t, pt3t);
 
-        System.out.println("pt2: " + pt2 + "\tpt3: " + pt3);
-        System.out.println("pt2t12: " + pt2t12 + "\tpt3t13" + pt3t13);
-        System.out.println("target heading: " + ln2t3t.angle + "\n");
+        System.out.println("pt2t: " + pt2t + "\tpt3t" + pt3t);
+        System.out.println("target heading: " + ln23.angle + "\n");
 
-        Line ln3t4t = new Line(pt3t13, pt4t14);
+        Line ln34 = new Line(pt3t, pt4t);
 
-        System.out.println("pt3: " + pt3 + "\tpt4: " + pt4);
-        System.out.println("pt3t13: " + pt3t13 + "\tpt4t14" + pt4t14);
-        System.out.println("target heading: " + ln3t4t.angle + "\n");
+        System.out.println("pt3t: " + pt3t + "\tpt4t" + pt4t);
+        System.out.println("target heading: " + ln34.angle + "\n");
 
     }
 
