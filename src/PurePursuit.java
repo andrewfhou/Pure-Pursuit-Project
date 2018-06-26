@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class PurePursuit {
     static class Point {
         double x, y;
@@ -41,7 +44,7 @@ public class PurePursuit {
             this.cosAngle = Math.cos(angle);
         }
 
-        double getAngle() { return angle; }
+        double getAngleRad() { return angle; }
         double getAngleDeg() { return Math.toDegrees(angle); }
 
         Point rotate(Point pt) { //todo generalize rotate method --> add 2 param method to Point()?
@@ -61,29 +64,37 @@ public class PurePursuit {
     }
 
     public static void main(String[] args) {
-        Point refPt = new Point(0.0,  0.0); //reference point
-        Point pt2 = new Point(10.0, 10.0);
-        Point pt3 = new Point(20.0, 15.0);
-        Point pt4 = new Point(30.0, 30.0);
+        int numPts = 6; // number of points not including ref point
+        List<Point> points = new ArrayList<>();
+        List<Point> transPoints = new ArrayList<>();
+        List<Line> lines = new ArrayList<>();
 
-        Point pt2t = pt2.rotateTransform(refPt);
-        Point pt3t = pt3.rotateTransform(refPt);
-        Point pt4t = pt4.rotateTransform(refPt);
+        points.add(new Point(0.0,  0.0));
+        points.add(new Point(10.0, 10.0));
+        points.add(new Point(20.0, 15.0));
+        points.add(new Point(30.0, 30.0));
+        points.add(new Point(40.0, 35.0));
+        points.add(new Point(40.0, 40.0));
 
-        Line ln12 = new Line(refPt, pt2t);
+        for(int i = 0; i < numPts; i++) {
+            transPoints.add(points.get(i).rotateTransform(points.get(0)));
+        }
 
-        System.out.println("refPt: " + refPt + "\tpt2t: " + pt2t);
-        System.out.println("target heading: " + ln12.angle + "\n");
+        for(int i = 0; i < numPts - 1; i++) {
+            lines.add(new Line(transPoints.get(i), transPoints.get(i + 1)));
+        }
 
-        Line ln23 = new Line(pt2t, pt3t);
+        System.out.println("pt1t: " + transPoints.get(0) + "\tpt2t: " + transPoints.get(1));
+        System.out.println("target heading: " + lines.get(0).getAngleDeg() + "\n");
 
-        System.out.println("pt2t: " + pt2t + "\tpt3t" + pt3t);
-        System.out.println("target heading: " + ln23.angle + "\n");
+        System.out.println("pt2t: " + transPoints.get(1) + "\tpt3t" + transPoints.get(2));
+        System.out.println("target heading: " + lines.get(1).getAngleDeg() + "\n");
 
-        Line ln34 = new Line(pt3t, pt4t);
+        System.out.println("pt3t: " + transPoints.get(2) + "\tpt4t" + transPoints.get(3));
+        System.out.println("target heading: " + lines.get(2).getAngleDeg() + "\n");
 
-        System.out.println("pt3t: " + pt3t + "\tpt4t" + pt4t);
-        System.out.println("target heading: " + ln34.angle + "\n");
+        System.out.println("pt4t: " + transPoints.get(3) + "\tpt5t" + transPoints.get(4));
+        System.out.println("target heading: " + lines.get(3).getAngleDeg() + "\n");
 
     }
 
