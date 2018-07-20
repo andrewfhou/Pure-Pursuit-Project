@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PurePursuit {
+
     static class Point {
         double x, y;
 
@@ -35,13 +36,15 @@ public class PurePursuit {
         private double angle;
         private double sinAngle;
         private double cosAngle;
+        private double lookAheadDist;
 
-        Line(Point pt1, Point pt2) {
+        Line(Point pt1, Point pt2, double lookAheadDist) {
             this.pt1 = pt1;
             this.pt2 = pt2;
             this.angle = Math.atan2(pt2.y - pt1.y, pt2.x - pt1.x);
             this.sinAngle = Math.sin(angle);
             this.cosAngle = Math.cos(angle);
+            this.lookAheadDist = lookAheadDist;
         }
 
         double getAngleRad() { return angle; }
@@ -60,6 +63,15 @@ public class PurePursuit {
 				y = (xTran * sinAngle) + (yTran * cosAngle);
 			}
             return new Point(x, y);
+        }
+
+        double getDesiredHeading(double botHeading, double botX, double botY) {
+            double theta = botHeading - angle;
+            double dist = Math.sqrt( ( Math.pow(botX - pt1.x, 2) ) + ( Math.pow(botY - pt1.y, 2) ) );
+
+            double yOffset = Math.sin(theta) * dist;
+
+            return Math.asin(yOffset / lookAheadDist) + angle;
         }
     }
 
