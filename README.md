@@ -1,2 +1,2 @@
-# 2018SummerProjects
-1816 FRC Robotics projects &amp; testing for the summer of 2018
+# 2018 Summer Pure Pursuit Project
+1816 FRC Robotics pure pursuit / unit testing code
