@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class PurePursuit {
+public class PurePursuitV2 {
 
     static class Point {
         double x, y;
@@ -27,22 +27,22 @@ public class PurePursuit {
         double getAngleRad() { return angle; }
         double getAngleDeg() { return Math.toDegrees(angle); }
 
-        double getDesiredHeading(double botHeadingDeg, double botX, double botY) {
-            double theta = (Math.atan2(botX - pt1.x, botY - pt1.y)) - getAngleDeg(); //angle from pos to start point, cw w/ respect to x-axis
+        double getDesiredHeading(double botX, double botY) {
+            double theta = Math.atan2(botY - pt1.y, botX - pt1.x) - getAngleRad(); //i dont understand how atan2 works, clearly
             double dist = Math.sqrt( ( Math.pow(botX - pt1.x, 2) ) + ( Math.pow(botY - pt1.y, 2) ) );
 
             double yOffset = Math.sin(theta) * dist;
 
-            return Math.asin(yOffset / lookAheadDist) + angle;
+            return Math.toDegrees(Math.asin(yOffset / lookAheadDist)) + getAngleDeg();
         }
 
-        boolean continue(double botX, double botY) {
+        boolean continueRun(double botX, double botY) {
           double dist = Math.sqrt( ( Math.pow(botX - pt2.x, 2) ) + ( Math.pow(botY - pt2.y, 2) ) );
 
           if(dist < lookAheadDist) {
-            return false;
-          } else {
             return true;
+          } else {
+            return false;
           }
         }
     }
@@ -59,16 +59,17 @@ public class PurePursuit {
         points.add(new Point(40.0, 40.0));
 
         for(int i = 0; i < points.size() - 1; i++) {
-            lines.add(new Line(lines.get(i), lines.get(i + 1)));
+            lines.add(new Line(points.get(i), points.get(i + 1), 2));
         }
 
-        System.out.println("Line segment: (0,0) --> (10,10)");
-        System.out.println("heading: 80deg | pos: (6,7) | corrected heading: " + lines.get(0).getDesiredHeading(80, 6, 7));
-        System.out.println("at end of line: " + lines.get(0).continue(6,7));
+        System.out.println("Line segment: " + points.get(0) + " --> " + points.get(1));
+        System.out.println("pos: (6,7) | corrected heading: " + lines.get(0).getDesiredHeading(6, 7));
 
-        System.out.println("Line segment: (0,0) --> (10,10)");
-        System.out.println("heading: 0deg | pos: (9,9) | corrected heading: " + lines.get(1).getDesiredHeading(0, 9, 9));
-        System.out.println("at end of line: " + lines.get(0).continue(9,9));
+        System.out.println("at end of line: " + lines.get(0).continueRun(6.0, 7.0));
+
+        System.out.println("Line segment: " + points.get(0) + " --> " + points.get(1));
+        System.out.println("pos: (9,9) | corrected heading: " + lines.get(0).getDesiredHeading(9, 9));
+        System.out.println("at end of line: " + lines.get(0).continueRun(9.0, 9.0));
     }
 
 }
