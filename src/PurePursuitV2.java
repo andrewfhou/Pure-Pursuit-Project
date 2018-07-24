@@ -37,9 +37,9 @@ public class PurePursuitV2 {
         }
 
         boolean continueRun(double botX, double botY) {
-          double dist = Math.sqrt( ( Math.pow(botX - pt2.x, 2) ) + ( Math.pow(botY - pt2.y, 2) ) );
+          double dist = ( Math.pow(botX - pt2.x, 2) ) + ( Math.pow(botY - pt2.y, 2) );
 
-          if(dist < lookAheadDist) {
+          if(dist < Math.pow(lookAheadDist, 2)) {
             return true;
           } else {
             return false;
